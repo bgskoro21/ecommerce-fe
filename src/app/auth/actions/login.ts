@@ -13,7 +13,7 @@ export async function loginAction({ email, password }: ILoginInput) {
     const response = await login(email, password);
 
     setCookie({ name: "accessToken", value: response.data?.accessToken ?? "", maxAge: 60 * 60 });
-    setCookie({ name: "refreshToken", value: response.data?.accessToken ?? "", maxAge: 60 * 60 * 24 * 7 });
+    setCookie({ name: "refreshToken", value: response.data?.refreshToken ?? "", maxAge: 60 * 60 * 24 * 7 });
 
     return { success: true, data: response.data };
   } catch (error: any) {

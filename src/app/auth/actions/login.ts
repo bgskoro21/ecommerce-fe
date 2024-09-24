@@ -8,13 +8,12 @@ interface ILoginInput {
   password: string;
 }
 
-// Fungsi server action untuk login
 export async function loginAction({ email, password }: ILoginInput) {
   try {
     const response = await login(email, password);
 
     setCookie({ name: "accessToken", value: response.data?.accessToken ?? "", maxAge: 60 * 60 });
-    setCookie({ name: "accessToken", value: response.data?.accessToken ?? "", maxAge: 60 * 60 * 24 * 7 });
+    setCookie({ name: "refreshToken", value: response.data?.accessToken ?? "", maxAge: 60 * 60 * 24 * 7 });
 
     return { success: true, data: response.data };
   } catch (error: any) {

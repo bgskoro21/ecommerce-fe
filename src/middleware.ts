@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
   const token = request.cookies.get("accessToken");
-  const loginPath = "/auth/login";
+  const loginPath = "/login";
   const protectedPaths = ["/", "/profile"];
 
   // Redirect ke halaman login jika tidak ada token dan pengguna mengakses route yang dilindungi
@@ -20,5 +20,5 @@ export function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/auth/login", "/", "/profile"], // Atur matcher untuk halaman login dan halaman yang dilindungi
+  matcher: ["/login", "/", "/profile"], // Atur matcher untuk halaman login dan halaman yang dilindungi
 };

@@ -3,22 +3,24 @@
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
-import InputField from "@/app/components/Input";
+import InputField from "@/components/Input";
 import { faCircleExclamation, faEnvelope, faEye, faEyeSlash, faKey } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { useState } from "react";
 import { loginAction } from "../actions/login";
 import { useRouter } from "next/navigation";
-import Alert from "@/app/components/Alert";
+import Alert from "@/components/Alert";
+import ButtonElement from "@/components/Button";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Email is invalid").required("Email is required"),
   password: Yup.string().min(6, "Password must be at least 6 characters").required("Password is required"),
 });
 
-const LoginPage = () => {
+const LoginForm = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
 
   const {
@@ -30,15 +32,16 @@ const LoginPage = () => {
   });
 
   const onSubmit = async (data: any) => {
+    setIsLoading(true);
     const result = await loginAction(data);
-    console.log(result);
 
     if (result.success) {
-      router.push("/"); // Ganti dengan path yang sesuai
+      router.push("/");
     } else {
-      console.log(result);
       setErrorMessage(typeof result.errors === "string" ? result.errors : "Login failed. Please try again.");
     }
+
+    setIsLoading(false);
   };
 
   return (
@@ -57,11 +60,9 @@ const LoginPage = () => {
           onClickSuffixIcon={() => setIsShowPassword(!isShowPassword)}
         />
         {errors.password && <p className="text-sm text-red-500 mt-2">{errors.password.message}</p>}
-        <button type="submit" className="bg-primary-gradient mt-4 text-white text-center w-full py-3 rounded-lg hover:opacity-80 duration-300">
-          LOGIN
-        </button>
+        <ButtonElement type="submit" className="bg-primary-gradient w-full text-white py-3 mt-4" isLoading={isLoading} />
         <p className="mt-3 text-center">
-          <span className="opacity-60">Don't have an account?</span>
+          <span className="opacity-60">Don't have an account? </span>
           <Link href="/" className="text-primary font-bold">
             Sign Up
           </Link>
@@ -71,4 +72,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default LoginForm;

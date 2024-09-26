@@ -3,3 +3,9 @@ export interface IApiResponse<T> {
   message?: string;
   data?: T;
 }
+
+export interface ActionResult {
+  success: boolean;
+  data?: any;
+  errors?: string;
+}

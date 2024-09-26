@@ -46,7 +46,7 @@ const LoginForm = () => {
 
   return (
     <>
-      {errorMessage && <Alert icon={faCircleExclamation} message={errorMessage} />}
+      {errorMessage && <Alert icon={faCircleExclamation} message={errorMessage} type="error" />}
       <form onSubmit={handleSubmit(onSubmit)} className="mt-3">
         <InputField placeholder="Email" type="email" icon={faEnvelope} {...register("email")} />
         {errors.email && <p className="text-sm text-red-500 mt-2">{errors.email.message}</p>}
@@ -60,10 +60,10 @@ const LoginForm = () => {
           onClickSuffixIcon={() => setIsShowPassword(!isShowPassword)}
         />
         {errors.password && <p className="text-sm text-red-500 mt-2">{errors.password.message}</p>}
-        <ButtonElement type="submit" className="bg-primary-gradient w-full text-white py-3 mt-4" isLoading={isLoading} />
+        <ButtonElement label="LOGIN" type="submit" className="bg-primary-gradient w-full text-white py-3 mt-4" isLoading={isLoading} />
         <p className="mt-3 text-center">
           <span className="opacity-60">Don't have an account? </span>
-          <Link href="/" className="text-primary font-bold">
+          <Link href="/register" className="text-primary font-bold">
             Sign Up
           </Link>
         </p>

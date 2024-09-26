@@ -1,11 +1,16 @@
 import { IApiResponse } from "@/common/types/apiResponse";
 import apiClient from "./api";
 import { AxiosError } from "axios";
-import { cookies } from "next/headers";
+import { IRegisterRequest } from "@/common/request/registerRequest";
 
 interface ILoginResponse {
   accessToken: string;
   refreshToken: string;
+}
+
+interface IRegisterResponse {
+  name: string;
+  email: string;
 }
 
 export async function login(email: string, password: string): Promise<IApiResponse<ILoginResponse>> {
@@ -15,6 +20,20 @@ export async function login(email: string, password: string): Promise<IApiRespon
     return response.data;
   } catch (error) {
     const axiosError = error as AxiosError;
+    throw axiosError;
+  }
+}
+
+export async function register(request: IRegisterRequest): Promise<IApiResponse<IRegisterResponse>> {
+  try {
+    const response = await apiClient.post<IApiResponse<IRegisterResponse>>("/users", { ...request, role: "STORE_OWNER" });
+
+    console.log(response);
+
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    console.log(axiosError.response?.data);
     throw axiosError;
   }
 }

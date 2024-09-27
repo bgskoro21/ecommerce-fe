@@ -10,7 +10,7 @@ interface IAlertComponent {
 
 const Alert: FC<IAlertComponent> = ({ icon, message, type }) => {
   return (
-    <div role="alert" className={`alert alert-${type} flex`}>
+    <div role="alert" className={`alert ${type} flex`}>
       <FontAwesomeIcon icon={icon} className="h-6 w-6 text-white" />
       <span className="text-white">{message}</span>
     </div>

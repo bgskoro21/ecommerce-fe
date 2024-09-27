@@ -38,6 +38,20 @@ export async function register(request: IRegisterRequest): Promise<IApiResponse<
   }
 }
 
+export async function verify(token: string): Promise<IApiResponse<IRegisterResponse>> {
+  try {
+    const response = await apiClient.post<IApiResponse<IRegisterResponse>>("/users/verify", { token });
+
+    console.log(response);
+
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    console.log(axiosError.response?.data);
+    throw axiosError;
+  }
+}
+
 export async function refreshAccessToken(): Promise<IApiResponse<ILoginResponse>> {
   try {
     const response = await apiClient.post("/users/refresh");

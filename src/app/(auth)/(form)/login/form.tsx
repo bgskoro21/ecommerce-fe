@@ -7,7 +7,7 @@ import InputField from "@/components/Input";
 import { faCircleExclamation, faEnvelope, faEye, faEyeSlash, faKey } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { useState } from "react";
-import { loginAction } from "../actions/login";
+import { loginAction } from "../../actions/login";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/Alert";
 import ButtonElement from "@/components/Button";

@@ -8,8 +8,8 @@ import { useRouter } from "next/navigation";
 import InputField from "@/components/Input";
 import ButtonElement from "@/components/Button";
 import Alert from "@/components/Alert";
-import { faCircleExclamation, faEnvelope, faKey, faEye, faEyeSlash, faCheckCircle } from "@fortawesome/free-solid-svg-icons";
-import { registerAction } from "../actions/register";
+import { faCircleExclamation, faEnvelope, faKey, faEye, faEyeSlash, faCheckCircle, faUser } from "@fortawesome/free-solid-svg-icons";
+import { registerAction } from "../../actions/register";
 import Link from "next/link";
 
 const validationSchema = Yup.object().shape({
@@ -60,10 +60,10 @@ const LoginForm = () => {
 
   return (
     <>
-      {successMessage && <Alert icon={faCheckCircle} message={successMessage} type="success" />}
-      {errorMessage && <Alert icon={faCircleExclamation} message={errorMessage} type="error" />}
+      {successMessage && <Alert icon={faCheckCircle} message={successMessage} type="alert-success" />}
+      {errorMessage && <Alert icon={faCircleExclamation} message={errorMessage} type="alert-error" />}
       <form onSubmit={handleSubmit(onSubmit)}>
-        <InputField placeholder="Your Name" type="text" icon={faEnvelope} {...register("name")} className="mt-4" />
+        <InputField placeholder="Your Name" type="text" icon={faUser} {...register("name")} className="mt-4" />
         {errors.name && <p className="text-sm text-red-500 mt-2">{errors.name.message}</p>}
 
         <InputField placeholder="Email" type="email" icon={faEnvelope} {...register("email")} className="mt-4" />

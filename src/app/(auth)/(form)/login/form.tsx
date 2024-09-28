@@ -6,11 +6,12 @@ import * as Yup from "yup";
 import InputField from "@/components/Input";
 import { faCircleExclamation, faEnvelope, faEye, faEyeSlash, faKey } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { loginAction } from "../../actions/login";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/Alert";
 import ButtonElement from "@/components/Button";
+import { useMessage } from "@/context/messageContext";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Email is invalid").required("Email is required"),
@@ -21,6 +22,7 @@ const LoginForm = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const { data, clearMessage } = useMessage();
   const router = useRouter();
 
   const {
@@ -30,6 +32,16 @@ const LoginForm = () => {
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+  useEffect(() => {
+    if (data.message) {
+      const timer = setTimeout(() => {
+        clearMessage();
+      }, 5000); // Menghapus pesan setelah 5 detik
+
+      return () => clearTimeout(timer);
+    }
+  }, [data.message, clearMessage]);
 
   const onSubmit = async (data: any) => {
     setIsLoading(true);
@@ -46,7 +58,8 @@ const LoginForm = () => {
 
   return (
     <>
-      {errorMessage && <Alert icon={faCircleExclamation} message={errorMessage} type="error" />}
+      {data.message && <Alert icon={faCircleExclamation} message={data.message} type={data.success ? "alert-success" : "alert-error"} />}
+      {errorMessage && <Alert icon={faCircleExclamation} message={errorMessage} type="alert-error" />}
       <form onSubmit={handleSubmit(onSubmit)} className="mt-3">
         <InputField placeholder="Email" type="email" icon={faEnvelope} {...register("email")} />
         {errors.email && <p className="text-sm text-red-500 mt-2">{errors.email.message}</p>}

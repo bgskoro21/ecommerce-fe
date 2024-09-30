@@ -1,7 +1,8 @@
 import { IApiResponse } from "@/common/types/apiResponse";
 import apiClient from "./api";
 import { AxiosError } from "axios";
-import { IRegisterRequest } from "@/common/request/registerRequest";
+import { IForgotPasswordRequest, IRegisterRequest } from "@/common/request/authRequest";
+import { setCookie } from "@/lib/cookies";
 
 interface ILoginResponse {
   accessToken: string;
@@ -12,7 +13,6 @@ interface IRegisterResponse {
   name: string;
   email: string;
 }
-
 export async function login(email: string, password: string): Promise<IApiResponse<ILoginResponse>> {
   try {
     const response = await apiClient.post<IApiResponse<ILoginResponse>>("/users/login", { email, password });
@@ -42,7 +42,29 @@ export async function verify(token: string): Promise<IApiResponse<IRegisterRespo
   try {
     const response = await apiClient.post<IApiResponse<IRegisterResponse>>("/users/verify", { token });
 
-    console.log(response);
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    console.log(axiosError.response?.data);
+    throw axiosError;
+  }
+}
+
+export async function reset(email: string): Promise<IApiResponse<IRegisterResponse>> {
+  try {
+    const response = await apiClient.post<IApiResponse<IRegisterResponse>>("/users/forgot-password", { email });
+
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    console.log(axiosError.response?.data);
+    throw axiosError;
+  }
+}
+
+export async function forgot({ token, newPassword, confirmPassword }: IForgotPasswordRequest): Promise<IApiResponse<IRegisterResponse>> {
+  try {
+    const response = await apiClient.post<IApiResponse<IRegisterResponse>>("/users/reset-password", { token, newPassword, confirmPassword });
 
     return response.data;
   } catch (error) {
@@ -56,27 +78,8 @@ export async function refreshAccessToken(): Promise<IApiResponse<ILoginResponse>
   try {
     const response = await apiClient.post("/users/refresh");
 
-    console.log(response);
-
-    // cookies().set({
-    //   name: "access_token",
-    //   value: response.data?.accessToken ?? "",
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV !== "development",
-    //   maxAge: 60 * 60, // 1 hour
-    //   path: "/",
-    //   sameSite: "strict",
-    // });
-
-    // cookies().set({
-    //   name: "refresh_token",
-    //   value: response.data?.refreshToken ?? "",
-    //   httpOnly: true,
-    //   secure: process.env.NODE_ENV !== "development",
-    //   maxAge: 60 * 60, // 1 hour
-    //   path: "/",
-    //   sameSite: "strict",
-    // });
+    setCookie({ name: "accessToken", value: response.data?.accessToken ?? "", maxAge: 60 * 60 });
+    setCookie({ name: "refreshToken", value: response.data?.refreshToken ?? "", maxAge: 60 * 60 * 24 * 7 });
 
     return response.data;
   } catch (error) {

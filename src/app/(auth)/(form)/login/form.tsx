@@ -7,7 +7,7 @@ import InputField from "@/components/Input";
 import { faCircleExclamation, faEnvelope, faEye, faEyeSlash, faKey } from "@fortawesome/free-solid-svg-icons";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { loginAction } from "../../actions/login";
+import { loginAction } from "../../action";
 import { useRouter } from "next/navigation";
 import Alert from "@/components/Alert";
 import ButtonElement from "@/components/Button";
@@ -63,16 +63,11 @@ const LoginForm = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="mt-3">
         <InputField placeholder="Email" type="email" icon={faEnvelope} {...register("email")} />
         {errors.email && <p className="text-sm text-red-500 mt-2">{errors.email.message}</p>}
-        <InputField
-          placeholder="Password"
-          type={!isShowPassword ? "password" : "text"}
-          icon={faKey}
-          suffixIcon={!isShowPassword ? faEyeSlash : faEye}
-          {...register("password")}
-          className="mt-4"
-          onClickSuffixIcon={() => setIsShowPassword(!isShowPassword)}
-        />
-        {errors.password && <p className="text-sm text-red-500 mt-2">{errors.password.message}</p>}
+        <Link href="/reset" className="flex justify-end text-primary text-sm mt-3 mb-1">
+          Forgot Password?
+        </Link>
+        <InputField placeholder="Password" type={!isShowPassword ? "password" : "text"} icon={faKey} suffixIcon={!isShowPassword ? faEyeSlash : faEye} {...register("password")} onClickSuffixIcon={() => setIsShowPassword(!isShowPassword)} />
+        {errors.password && <p className="text-sm text-red-500">{errors.password.message}</p>}
         <ButtonElement label="LOGIN" type="submit" className="bg-primary-gradient w-full text-white py-3 mt-4" isLoading={isLoading} />
         <p className="mt-3 text-center">
           <span className="opacity-60">Don't have an account? </span>

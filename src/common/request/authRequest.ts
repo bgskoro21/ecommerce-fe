@@ -5,3 +5,9 @@ export interface IRegisterRequest {
   confirmPassword: string;
   role: string;
 }
+
+export interface IForgotPasswordRequest {
+  token: string;
+  newPassword: string;
+  confirmPassword: string;
+}

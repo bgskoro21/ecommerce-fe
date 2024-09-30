@@ -4,13 +4,12 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import InputField from "@/components/Input";
 import ButtonElement from "@/components/Button";
 import Alert from "@/components/Alert";
 import { faCircleExclamation, faEnvelope, faKey, faEye, faEyeSlash, faCheckCircle, faUser } from "@fortawesome/free-solid-svg-icons";
-import { registerAction } from "../../actions/register";
 import Link from "next/link";
+import { registerAction } from "../../action";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Email is invalid").required("Email is required"),

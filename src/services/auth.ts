@@ -24,6 +24,17 @@ export async function login(email: string, password: string): Promise<IApiRespon
   }
 }
 
+export async function googleLogin(code: string, role: string): Promise<IApiResponse<ILoginResponse>> {
+  try {
+    const response = await apiClient.post<IApiResponse<ILoginResponse>>("/users/google-login", { code, role });
+
+    return response.data;
+  } catch (error) {
+    const axiosError = error as AxiosError;
+    throw axiosError;
+  }
+}
+
 export async function register(request: IRegisterRequest): Promise<IApiResponse<IRegisterResponse>> {
   try {
     const response = await apiClient.post<IApiResponse<IRegisterResponse>>("/users", { ...request, role: "STORE_OWNER" });

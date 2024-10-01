@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { verifyEmail } from "../actions/verify";
+import { verifyEmail } from "../action";
 import { useRouter } from "next/navigation";
 import { useMessage } from "@/context/messageContext";
 

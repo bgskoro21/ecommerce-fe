@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import Alert from "@/components/Alert";
 import ButtonElement from "@/components/Button";
 import { useMessage } from "@/context/messageContext";
+import GoogleLoginButton from "@/components/Button/GoogleLoginButton";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string().email("Email is invalid").required("Email is required"),
@@ -22,7 +23,7 @@ const LoginForm = () => {
   const [isShowPassword, setIsShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { data, clearMessage } = useMessage();
+  const { data, clearMessage, setData } = useMessage();
   const router = useRouter();
 
   const {
@@ -32,6 +33,27 @@ const LoginForm = () => {
   } = useForm({
     resolver: yupResolver(validationSchema),
   });
+
+  useEffect(() => {
+    const handleOAuthMessage = (event: MessageEvent) => {
+      if (event.origin !== process.env.NEXT_PUBLIC_BASE_URL) return; // Security check
+
+      if (event.data.type === "oauth") {
+        if (event.data.success) {
+          router.push("/");
+        } else {
+          setData({ success: false, message: event.data.error });
+        }
+      }
+    };
+
+    window.addEventListener("message", handleOAuthMessage);
+
+    // Cleanup listener on component unmount
+    return () => {
+      window.removeEventListener("message", handleOAuthMessage);
+    };
+  }, [data]);
 
   useEffect(() => {
     if (data.message) {
@@ -76,6 +98,7 @@ const LoginForm = () => {
           </Link>
         </p>
       </form>
+      <GoogleLoginButton />
     </>
   );
 };
